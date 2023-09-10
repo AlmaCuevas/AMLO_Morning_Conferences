@@ -1,41 +1,18 @@
-# Conferencias Matutinas del Presidente Andres Manuel López Obrador ( Mañaneras AMLO )
+# TODO:
 
-![Foto del Presidente de Los Estados Unidos Mexicanos, Andres Manuel López Obrador](foto_amlo.jpg)
+* The transcript doesn't have all the spaces between a two words when a dot is in the middle.
+  * Example: "arriba.Entonces"
+  * Solution: You have to separate by ,.? etc
+* The creation of the graph doesn't take long, the drawing does. Move the ipynb to a runable python file to run everything
+out of Pycharm (in the terminal).
+  * Drawings are not useful. There are too many dots to visualize.
+* The result from the measures have to be recorded in txt files, firt analyze one and decide whether the information is useful and how it can be interpreted.
+* The nodes doesn't have sense if the results are verbs. Pre-process to only have nouns.
 
-Este repositorio contiene las transcripciones de las versiones estenográficas de las conferencias matutinas del Presidente Andres Manuel López Obrador desde el inicio de las mismas en Diciembre 2018 organizadas en CSVs.
 
-El objetivo de este repositorio es mostrar el alcance de análisis de datos aplicado a temas de interés público en México. 
-
-Buscamos que personas con interés en análisis, creación de visualizaciones y con un sentido de curiosidad en datos, cuenten con una base de datos actualizada constantemente con la que se pueda generar contenido que promueva el aprendizaje.
-
-Si observas que este repositorio no ha sido actualizado, solo menciónanos en Twitter ( @nostrodata ) para actualizarlo a la brevedad :)
-
-## Estructura y Formato
-Las transcripciones se encuentran ordenadas con la siguiente estructura:
-```
-— Folder ( año )
-  — Folder ( mes-año )
-    — Folder ( mes dia, año )
-      — Folder ( csv_por_participante )
-        — CSV's de las intervenciones de cada participante.
-      — Folder ( wordmaps_por_participante )
-        — PNG's de mapas de las palabras mas usadas por cada participante.
-      — CSV de la mañanera completa con todos los participantes.
-      — PNG de mapa de las palabras mas usadas por todos los participantes.
-```
-
-## NOTA IMPORTANTE
-En los archivos CSV's se incluye una columna con nombre: "Sentimiento" cuyo objetivo es agregar una métrica de sentimiento al texto del renglón del CSV. Por ahora, este dato NO es válido ni representativo del sentmiento del texto en el renglón. POR FAVOR IGNORA este dato.
-
-## Licencia de Uso
-El repositorio contiene la licencia: "Creative Commons Attribution Share Alike 4.0 International" que puede ser encontrada en este repositorio en el archivo LICENSE.md y en el siguiente hipervínculo: https://creativecommons.org/licenses/by-sa/4.0/
-
-Si utilizas alguno de los archivos en este repositorio, solo te pedimos nos menciones: 
-
-* @nostrodata 
-* https://www.nostrodata.com
-
-## Síguenos en Nuestras Redes Sociales
-* https://www.twitter.com/nostrodata
-* https://www.facebook.com/nostrodata
-* https://www.instagram.com/nostrodata
+# Notes: 
+* No singularization was done bc it run horribly.
+  * The "Gracias" was being changed to "Gracia"
+* The graph doesn't represent the frequency to which the words appear, the bag of words is a set. The graph is just meant to represent how the nouns relate to other nouns.
+* A different project should be done to quantize the most frequent nouns (that's the idea on "most_frequent_words.ipynb)
+* A different project can be predict which year it is by the entries. Could be done with BERT. But it sounds silly.
