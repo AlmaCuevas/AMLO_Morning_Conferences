@@ -1,0 +1,117 @@
+#!/usr/bin/env python
+from share import years
+import pandas as pd
+import spacy
+import networkx as nx
+import pickle
+
+def main():
+    nlp = spacy.load('es_core_news_lg')
+
+    for year_label in years:
+        print(year_label)
+        data = pd.read_csv(f'most_frequent/df_{year_label}.csv')
+
+        # Using spaCy to parse
+        tokens = []
+        lemma = []
+        pos = []
+        parsed_doc = []
+
+        for doc in nlp.pipe(data['term'].astype('unicode').values, batch_size=50):
+            if doc.has_annotation("DEP"):
+                parsed_doc.append(doc)
+                tokens.append(''.join([n.text for n in doc]))
+                lemma.append(''.join([n.lemma_ for n in doc]))
+                pos.append(''.join([n.pos_ for n in doc]))
+            else:
+                # We want to make sure that the lists of parsed results have the
+                # same number of entries of the original Dataframe, so add some blanks in case the parse fails
+                tokens.append(None)
+                lemma.append(None)
+                pos.append(None)
+
+        data['parsed_doc'] = parsed_doc
+        data['comment_tokens'] = tokens
+        data['comment_lemma'] = lemma
+        data['pos_pos'] = pos
+        # %% md
+        ## Basic checks of the parsed data
+        # %%
+        world_data = data.loc[data['pos_pos'].isin(['NOUN', 'ADJ'])].reset_index(drop=True)
+        world_data
+        # %%
+        data = world_data
+
+        tokens = []
+        lemma = []
+        pos = []
+        parsed_doc = []
+
+        for doc in nlp.pipe(data["comment_lemma"].astype('unicode').values, batch_size=50):
+            if doc.has_annotation("DEP"):
+                parsed_doc.append(doc)
+                tokens.append(''.join([n.text for n in doc]))
+                lemma.append(''.join([n.lemma_ for n in doc]))
+                pos.append(''.join([n.pos_ for n in doc]))
+            else:
+                # We want to make sure that the lists of parsed results have the
+                # same number of entries of the original Dataframe, so add some blanks in case the parse fails
+                parsed_doc.append(None)
+                tokens.append(None)
+                lemma.append(None)
+                pos.append(None)
+
+        data['parsed_doc'] = parsed_doc
+        data['comment_tokens'] = tokens
+        data['comment_lemma'] = lemma
+        data['pos_pos'] = pos
+
+        world_data=data
+        world_data.to_csv(
+            f'/Users/almacuevas/work_projects/conferencias_matutinas_amlo/spacy_graph_metainfo/world_data_lemma_set_{year_label}.csv')
+
+        # takes 1s for 500 nodes - but of course this won't scale linearly!
+        raw_G = nx.Graph()  # undirected
+        n = 0
+
+        for i in world_data['parsed_doc']:  # sure, it's inefficient, but it will do
+            for j in world_data['parsed_doc']:
+                if i != j:
+                    if not (raw_G.has_edge(j, i)):
+                        sim = i.similarity(j)
+                        raw_G.add_edge(i, j, weight=sim)
+                        n = n + 1
+
+        print(raw_G.number_of_nodes(), "nodes, and", raw_G.number_of_edges(), "edges created.")
+
+        edges_to_kill = []
+        min_wt = 0.4  # this is our cutoff value for a minimum edge-weight
+
+        for n, nbrs in raw_G.adj.items():
+            # print("\nProcessing origin-node:", n, "... ")
+            for nbr, eattr in nbrs.items():
+                # remove edges below a certain weight
+                data = eattr['weight']
+                if data < min_wt:
+                    # print('(%.3f)' % (data))
+                    # print('(%d, %d, %.3f)' % (n, nbr, data))
+                    # print("\nNode: ", n, "\n <-", data, "-> ", "\nNeighbour: ", nbr)
+                    edges_to_kill.append((n, nbr))
+
+        print("\n", len(edges_to_kill) / 2, "edges to kill (of", raw_G.number_of_edges(), "), before de-duplicating")
+
+        for u, v in edges_to_kill:
+            if raw_G.has_edge(u, v):  # catches (e.g.) those edges where we've removed them using reverse ... (v, u)
+                raw_G.remove_edge(u, v)
+
+        strong_G = raw_G
+        strong_G.remove_nodes_from(list(nx.isolates(strong_G)))
+
+        # Save graph object to file
+        pickle.dump(raw_G, open(f'/Users/almacuevas/work_projects/conferencias_matutinas_amlo/graphs/raw_G_{year_label}.pickle', 'wb'))
+        pickle.dump(strong_G, open(f'/Users/almacuevas/work_projects/conferencias_matutinas_amlo/graphs/strong_G_{year_label}.pickle', 'wb'))
+
+if __name__ == "__main__":
+    main()
+    print("Done!")
