@@ -1,16 +1,12 @@
-# TODO:
-* The world_data_lemma_set can be convert into Graphs but only one at a time can be run, otherwise they all fail because of memory shortage.
-* From the measures, BC takes so long, I have never finish one. No idea if it'll even work.
+# Processing of the Morning Conferences: "Las mañaneras"
 
-# Notes: 
-* No singularization was done bc it run horribly.
-  * The "Gracias" was being changed to "Gracia"
-* The graph doesn't represent the frequency to which the words appear, the bag of words is a set. The graph is just meant to represent how the nouns relate to other nouns.
-* The creation of the graph doesn't take long, the drawing does. That's why there are files to run everything, instead of ipynb.
-  * Drawings are not useful. There are too many dots to visualize.
-  * The drawing seems impossible so far in Gephi or Neo4j. The graphs are too big and no computer available can load it.
-  * The nodes doesn't have sense if the results are verbs. That's why the folder "spacy_graph_metainfo" only have a set of nouns and adjectives.
+Database obtained from: https://github.com/NOSTRODATA/conferencias_matutinas_amlo @nostrodata https://www.nostrodata.com
 
-# Other ideas
-* A different project should be done to quantize the most frequent nouns (that's the idea on "most_frequent_words.ipynb)
-* A different project can be "predict which year it is" by the entries. Could be done with BERT. But it sounds silly.
+The code from the Notebooks are the didactic version. The .py are meant to be run in the terminal.
+
+Descriptions:
+* Notebook "0. basic_extractions" runs the tree of .csv files and joins them in one. Plus, it contains two basic graphs.
+* Notebook "1. most_frequent_words" has the TfidfVectorizer
+* Notebook "2. networkx_and_measures" was an edition from https://www.kaggle.com/code/caractacus/thematic-text-analysis-using-spacy-networkx
+* Notebook "3. measures_summary" is to visualize the measures from above
+* Notebook "4. unsupervised_topics_classification_complete_yearconferences" for more information check: https://elmundodelosdatos.com/topic-modeling-gensim-asignacion-topicos/

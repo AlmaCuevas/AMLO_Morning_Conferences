@@ -37,7 +37,6 @@ def main():
         ## Basic checks of the parsed data
         # %%
         world_data = data.loc[data['pos_pos'].isin(['NOUN', 'ADJ'])].reset_index(drop=True)
-        world_data
         # %%
         data = world_data
 

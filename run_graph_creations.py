@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-from share import years
 import pandas as pd
 import networkx as nx
 import pickle
@@ -10,7 +9,7 @@ def main(year_label: str):
 
     nlp = spacy.load('es_core_news_lg')
     world_data = pd.read_csv(
-        f'/Users/almacuevas/work_projects/conferencias_matutinas_amlo/spacy_graph_metainfo/world_data_lemma_set_{year_label}.csv')
+        f'/conferencias_matutinas_amlo/spacy_graph_metainfo/world_data_lemma_set_{year_label}.csv')
 
     data = pd.DataFrame({"term": list(set(world_data['comment_lemma']))})
     print("Start parsing with Spacy")
@@ -56,13 +55,13 @@ def main(year_label: str):
         if raw_G.has_edge(u, v):  # catches (e.g.) those edges where we've removed them using reverse ... (v, u)
             raw_G.remove_edge(u, v)
 
-    pickle.dump(raw_G, open(f'/Users/almacuevas/work_projects/conferencias_matutinas_amlo/graphs/raw_G_{year_label}.pickle', 'wb'))
+    pickle.dump(raw_G, open(f'/conferencias_matutinas_amlo/graphs/raw_G_{year_label}.pickle', 'wb'))
 
 
     strong_G = raw_G
     strong_G.remove_nodes_from(list(nx.isolates(strong_G)))
 
-    pickle.dump(strong_G, open(f'/Users/almacuevas/work_projects/conferencias_matutinas_amlo/graphs/strong_G_{year_label}.pickle', 'wb'))
+    pickle.dump(strong_G, open(f'/conferencias_matutinas_amlo/graphs/strong_G_{year_label}.pickle', 'wb'))
 
 if __name__ == "__main__":
     main(sys.argv[1])

@@ -1,11 +1,7 @@
 import pandas as pd
-from sklearn.cluster import KMeans
 import nltk
 from nltk.corpus import stopwords
-import numpy as np
-from pattern.text.es import singularize
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
-import re
 from tqdm.notebook import tqdm
 tqdm.pandas()
 
