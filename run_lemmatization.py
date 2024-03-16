@@ -66,7 +66,7 @@ def main():
 
         world_data=data
         world_data.to_csv(
-            f'/Users/almacuevas/work_projects/conferencias_matutinas_amlo/spacy_graph_metainfo/world_data_lemma_set_{year_label}.csv')
+            f'/conferencias_matutinas_amlo/spacy_graph_metainfo/world_data_lemma_set_{year_label}.csv')
 
 if __name__ == "__main__":
     main()
